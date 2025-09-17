@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href='https://fonts.googleapis.com/css?family=Space%20Mono' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Spyfall</title>
+</head>
+    <body>
+        ROOM PAGE: {{ code }}
+
+        Players:
+        <ul id="players-list"></ul>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="../static/socket.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        const name = sessionStorage.getItem("name");
+        const code = "{{ code }}";
+        socket.emit("join", { name: name, room: code})
+
+        socket.on("player_joined", ({ players }) => {
+            displayPlayers(players);
+        })
+
+        function displayPlayers(players) {
+            const ul = document.getElementById("players-list");
+            ul.innerHTML = '';
+            players.forEach(player => {
+                const li = document.createElement("li");
+                li.textContent = player;
+                ul.appendChild(li);
+            })
+        }
+    </script>
+</html>
