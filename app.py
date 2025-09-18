@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_socketio import SocketIO, join_room, emit
 from models.player import Player
 from models.game import Game
@@ -32,11 +32,11 @@ def create_room():
     player.set_owner(True)
     code = generate_code()
     game = Game(code)
-    added = game.add_player(player)
-    if not added:
+    unique = game.add_player(player)
+    if not unique:
         return jsonify({"error": "Name is not unique"}), 400
     game_manager.add_game(game)
-    return jsonify({"code": code})
+    return redirect(url_for('lobby',name=name, code=code))
 
 @app.route('/rooms/join')
 def join_room_http():
@@ -53,22 +53,19 @@ def join_room_http():
     added = game.add_player(player)
     if not added:
         return jsonify({"error": "Name is not unique"})
-    return jsonify({"code": game.get_code()})
+    return redirect(url_for('lobby', name=name, code=code))
 
-@app.route('/rooms/<code>')
-def lobby(code):
-    valid_code = game_manager.get_game(code)
-    if not valid_code:
-        return jsonify({"error": "Code not found."}), 400
-    return render_template("room.html", code=code)
+@app.route('/rooms/<name>&<code>')
+def lobby(name, code):
+    return render_template("room.html", name=name, code=code)
 
-@socketio.on('join')
-def handle_join(data):
+@socketio.on('join_room')
+def handle_join_room(data):
+    name = data.get('name')
     room = data.get('room')
-    join_room(room) # Join Room
+    join_room(room)
     players = game_manager.get_game(room).get_player_names()
-    emit("player_joined", { "players": players }, to=room) # Notify all others in room that new players has join (to update the players list)
-    print(f"{data['name']} joined {data['room']}")
+    emit('player_joined', {'players': players}, to=room)
 
 if __name__ == '__main__':
     socketio.run(app)
