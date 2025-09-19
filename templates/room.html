@@ -9,18 +9,39 @@
     <title>Spyfall</title>
 </head>
     <body>
-        ROOM PAGE: {{ code }}
+        <div class="heading-container code">
+            <div id="game-code-container">
+                <span id="game-code">{{ code }}</span>
+                <img class="icon" src="../static/icons/copy.svg" alt="copy">
+            </div>
+        </div>
 
-        Players:
-        <ul id="players-list"></ul>
+        <div class="section">
+            <div class="heading-container">
+                <span class="heading">Players</span>
+                <img class="icon arrow" src="../static/icons/arrow-down.svg" alt="arrow-down">
+            </div>
+            <div class="grid-container" id="players-container">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="heading-container">
+                <span class="title">Locations</span>
+                <img class="icon arrow" src="../static/icons/arrow-down.svg" alt="arrow-down">
+            </div>
+        </div>
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="../static/socket.js"></script>
     <script type="text/javascript" charset="utf-8">
         const name = "{{ name }}";
         const code = "{{ code }}";
+        const is_owner = "{{ owner }}";
+        const locations = "{{ locations }}";
 
         console.log(code);
+        console.log(is_owner);
 
         socket.on("connect", () => {
             socket.emit("join_room", {
@@ -29,8 +50,31 @@
             })
         });
 
+        const playersContainer = document.getElementById("players-container");
         socket.on("player_joined", (data) => {
-            console.log(`${data.players} are now playing ...`);
+            playersContainer.innerHTML = '';
+            data.players.forEach(player => {
+                const cell = document.createElement('div');
+                cell.style.display = 'flex';
+                cell.style.justifyContent = 'space-between';
+                cell.style.alignItems = 'center';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = player;
+                nameSpan.style.width = 'fit-content';
+
+                const votesContainer = document.createElement('div');
+
+                {#const vote = document.createElement('img');#}
+                {#vote.className = "icon";#}
+                {#vote.src = "../static/icons/spy.svg";#}
+                {#vote.alt = "spy";#}
+                {#votesContainer.appendChild(vote);#}
+
+                cell.appendChild(nameSpan);
+                cell.appendChild(votesContainer);
+                playersContainer.appendChild(cell);
+            })
         });
     </script>
 </html>

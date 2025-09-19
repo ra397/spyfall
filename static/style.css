@@ -55,3 +55,27 @@ a {
 input[type="text"] {
     margin: 0.5rem;
 }
+
+.heading-container {
+    display: flex;
+    align-items: center;
+}
+
+img.icon {
+    width: 1rem;
+    padding: 0.25rem;
+}
+
+img.icon.arrow {
+    transform: rotate(-90deg);
+}
+
+.heading-container.code {
+    justify-content: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid gray;
+}

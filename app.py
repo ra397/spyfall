@@ -57,15 +57,25 @@ def join_room_http():
 
 @app.route('/rooms/<name>&<code>')
 def lobby(name, code):
-    return render_template("room.html", name=name, code=code)
+    game = game_manager.get_game(code)
+    if not game:
+        return jsonify({"error": "Game not found."})
+    player = game.get_player(name)
+    if not player:
+        return jsonify({"error": "Player not found."})
+    return render_template("room.html", name=name, code=code, locations=game.get_locations(), owner=str(player.is_owner()))
 
 @socketio.on('join_room')
 def handle_join_room(data):
     name = data.get('name')
     room = data.get('room')
     join_room(room)
-    players = game_manager.get_game(room).get_player_names()
+    game = game_manager.get_game(room)
+    if not game:
+        return jsonify({"error": "Game not found."})
+    players = game.get_player_names()
     emit('player_joined', {'players': players}, to=room)
+    return None
 
 if __name__ == '__main__':
     socketio.run(app)
