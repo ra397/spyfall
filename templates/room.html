@@ -37,7 +37,7 @@
             <div class="grid-container" id="locations-container"></div>
         </div>
 
-        <span class="hidden" id="countdown">08:00</span>
+        <span class="hidden" id="countdown"></span>
 
         {% if owner %}
         <div id="lobby-controls">
@@ -115,6 +115,7 @@
             const timeControl = timeValueEl.closest(".control");
             const timeMinus = timeControl.querySelectorAll(".control-element")[0];
             const timePlus = timeControl.querySelectorAll(".control-element")[1];
+            const endGameBtn = document.getElementById("end-game-btn");
 
             timeMinus.addEventListener("click", () => {
                 let currDurationSeconds = totalSeconds(timeValueEl.textContent);
@@ -142,25 +143,35 @@
                 const data = await response.json();
                 console.log(data.message);
             });
+
+            endGameBtn.addEventListener("click", async () => {
+                const response = await fetch(`/rooms/${name}&${code}/end`);
+                const data = await response.json();
+                console.log(data.message);
+            });
         }
 
         const locationEl = document.getElementById("location");
         const occupationEl = document.getElementById("occupation");
-        socket.on("secret", (data) => {
+        socket.on("game_started", (data) => {
             // Each player should get an individualized message containing location and occupation (or SPY)
             // Duration
             // Players?
             console.log("game has been started by owner");
-            console.log(data.location);
-            console.log(data.occupation);
+            console.log(data.result);
 
-            locationEl.textContent = data.location;
-            occupationEl.textContent = data.occupation;
+            locationEl.textContent = data.result.location;
+            occupationEl.textContent = data.result.occupation;
             switchView("game");
-
-
-            // TODO: start countdown timer
+            startCountdown(data.duration);
         });
+
+        socket.on("game_ended", () => {
+            console.log("game has been ended by owner");
+            clearCountdown();
+            countdownEl.textContent = "";
+            switchView("lobby");
+        })
 
         // vote socket.emit
 
@@ -199,6 +210,29 @@
             }
         }
 
+        let countdownInterval = null;
+        const countdownEl = document.getElementById("countdown");
+
+        function clearCountdown() {
+            if (countdownInterval !== null) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+
+        function startCountdown(duration) {
+            countdownInterval = setInterval(() => {
+              if (duration <= 0) {
+                clearCountdown();
+                countdownEl.textContent = "00:00";
+                return;
+              }
+
+              duration--;
+              countdownEl.textContent = mmss(duration);
+              }, 1000);
+        }
+
         // Utility functions
         function mmss(totalSeconds) {
           const m = Math.floor(totalSeconds / 60);
@@ -212,6 +246,6 @@
             const minutes = parseInt(m[1], 10);
             const seconds = parseInt(m[2], 10);
             return minutes * 60 + seconds;
-        }
+        }``
     </script>
 </html>

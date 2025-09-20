@@ -99,9 +99,25 @@ def start_game(name, code):
     results = game.start()
     # Send each player a personalized message with location and occupation (or SPY)
     for socket_id, result in results.items():
-        socketio.emit('secret', result, to=socket_id)
+        socketio.emit('game_started', { 'result': result, 'duration': game.get_game_duration() }, to=socket_id)
     return jsonify({"message": "game started"})
 
+@app.route('/rooms/<name>&<code>/end')
+def end_game(name, code):
+    game = game_manager.get_game(code)
+    if not game:
+        return jsonify({"error": "Game not found."})
+    player = game.get_player(name)
+    if not player:
+        return jsonify({"error": "Player not found."})
+    if not player.is_owner():
+        return jsonify({"error": "Only owner can end a game."})
+    game.end()
+    # notify room that game has ended
+    for player in game.players:
+        socket_id = player.get_socket_id()
+        socketio.emit('game_ended', to=socket_id)
+    return jsonify({"message": "game ended"})
 
 if __name__ == '__main__':
     socketio.run(app)

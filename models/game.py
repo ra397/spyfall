@@ -42,6 +42,9 @@ class Game:
     def set_game_duration(self, duration):
         self.game_duration = duration
 
+    def get_game_duration(self):
+        return self.game_duration
+
     def start(self):
         possible_locations = self.get_locations()
         if not possible_locations:
@@ -72,3 +75,6 @@ class Game:
                 }
                 role_index += 1
         return results
+
+    def end(self):
+        self.set_game_duration(480)
