@@ -16,13 +16,17 @@
             </div>
         </div>
 
+        <div class="role hidden">
+            <span id="location">Location</span>
+            <span id="occupation">Occupation</span>
+        </div>
+
         <div class="section">
             <div class="heading-container">
                 <span class="heading">Players</span>
                 <img class="icon arrow" src="../static/icons/arrow-down.svg" alt="arrow-down">
             </div>
-            <div class="grid-container" id="players-container">
-            </div>
+            <div class="grid-container" id="players-container"></div>
         </div>
 
         <div class="section">
@@ -30,19 +34,35 @@
                 <span class="title">Locations</span>
                 <img class="icon arrow" src="../static/icons/arrow-down.svg" alt="arrow-down">
             </div>
+            <div class="grid-container" id="locations-container"></div>
         </div>
+
+        <span class="hidden" id="countdown">08:00</span>
+
+        {% if owner %}
+        <div id="lobby-controls">
+            <span class="control-label">Time:</span>
+            <div class="control">
+                <span class="control-element">-</span>
+                <span class="value" id="time">08:00</span>
+                <span class="control-element">+</span>
+            </div>
+        </div>
+        <div class="button-container">
+            <span class="button" id="start-game-btn">Start</span>
+            <span class="button hidden" id="end-game-btn">End</span>
+        </div>
+        {% endif %}
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script src="../static/socket.js"></script>
     <script type="text/javascript" charset="utf-8">
         const name = "{{ name }}";
         const code = "{{ code }}";
-        const is_owner = "{{ owner }}";
-        const locations = "{{ locations }}";
+        const owner = {{ owner|tojson }};
+        const locations = {{ locations|tojson }};
 
-        console.log(code);
-        console.log(is_owner);
-
+        const socket = io();
+        // On connection, notify room that you have connected
         socket.on("connect", () => {
             socket.emit("join_room", {
                 name: name,
@@ -50,6 +70,8 @@
             })
         });
 
+        let num_players = 0;
+        // when notified that a player has joined, update players list
         const playersContainer = document.getElementById("players-container");
         socket.on("player_joined", (data) => {
             playersContainer.innerHTML = '';
@@ -75,6 +97,121 @@
                 cell.appendChild(votesContainer);
                 playersContainer.appendChild(cell);
             })
+            num_players = data.players.length;
         });
+
+        // Display locations
+        const locationsContainer = document.getElementById("locations-container");
+        locations.forEach(location => {
+            const locationSpan = document.createElement('span');
+            locationSpan.textContent = location;
+            locationsContainer.appendChild(locationSpan);
+        });
+
+        // owner controls
+        if (owner) {
+            const startGameBtn = document.getElementById("start-game-btn");
+            const timeValueEl = document.getElementById("time");
+            const timeControl = timeValueEl.closest(".control");
+            const timeMinus = timeControl.querySelectorAll(".control-element")[0];
+            const timePlus = timeControl.querySelectorAll(".control-element")[1];
+
+            timeMinus.addEventListener("click", () => {
+                let currDurationSeconds = totalSeconds(timeValueEl.textContent);
+                if (currDurationSeconds - 30 >= (6*60)) {
+                    currDurationSeconds -= 30;
+                }
+                timeValueEl.textContent = mmss(currDurationSeconds);
+            });
+
+            timePlus.addEventListener("click", () => {
+               let currDurationSeconds = totalSeconds(timeValueEl.textContent);
+               if (currDurationSeconds + 30 <= (12*60)) {
+                   currDurationSeconds += 30;
+               }
+               timeValueEl.textContent = mmss(currDurationSeconds);
+            });
+
+            startGameBtn.addEventListener("click", async () => {
+                if (num_players < 3) {
+                    return;
+                }
+                // info to provide: code, duration
+                const duration = totalSeconds(timeValueEl.textContent);
+                const response = await fetch(`/rooms/${name}&${code}/start?duration=${duration}`);
+                const data = await response.json();
+                console.log(data.message);
+            });
+        }
+
+        const locationEl = document.getElementById("location");
+        const occupationEl = document.getElementById("occupation");
+        socket.on("secret", (data) => {
+            // Each player should get an individualized message containing location and occupation (or SPY)
+            // Duration
+            // Players?
+            console.log("game has been started by owner");
+            console.log(data.location);
+            console.log(data.occupation);
+
+            locationEl.textContent = data.location;
+            occupationEl.textContent = data.occupation;
+            switchView("game");
+
+
+            // TODO: start countdown timer
+        });
+
+        // vote socket.emit
+
+        // timer countdown based on duration received
+
+        // Switch views
+        function switchView(view) {
+            // Lobby items
+            const headingCode = document.querySelector(".heading-container.code");
+            const lobbyControls = document.getElementById("lobby-controls");
+            const startGameBtn = document.getElementById("start-game-btn");
+
+            // Game items
+            const headingRole = document.querySelector(".role");
+            const countdownTimer = document.getElementById("countdown");
+            const endGameBtn = document.getElementById("end-game-btn");
+
+
+            if (view === 'lobby') {
+                headingCode?.classList.remove("hidden");
+                lobbyControls?.classList.remove("hidden");
+                startGameBtn?.classList.remove("hidden");
+
+                headingRole?.classList.add("hidden");
+                countdownTimer?.classList.add("hidden");
+                endGameBtn?.classList.add("hidden");
+            }
+            else {
+                headingRole?.classList.remove("hidden");
+                countdownTimer?.classList.remove("hidden");
+                endGameBtn?.classList.remove("hidden");
+
+                headingCode?.classList.add("hidden");
+                lobbyControls?.classList.add("hidden");
+                startGameBtn?.classList.add("hidden");
+            }
+        }
+
+        // Utility functions
+        function mmss(totalSeconds) {
+          const m = Math.floor(totalSeconds / 60);
+          const s = totalSeconds % 60;
+          return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        }
+
+        function totalSeconds(mmss) {
+            const m = /^(\d+):([0-5]?\d)$/.exec(mmss.trim());
+            if (!m) throw new Error('Invalid time format. Use "MM:SS" (e.g., "08:00").');
+            const minutes = parseInt(m[1], 10);
+            const seconds = parseInt(m[2], 10);
+            return minutes * 60 + seconds;
+        }
     </script>
 </html>

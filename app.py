@@ -53,6 +53,7 @@ def join_room_http():
     added = game.add_player(player)
     if not added:
         return jsonify({"error": "Name is not unique"})
+    # TODO: somewhere in here we need to check if lobby is full
     return redirect(url_for('lobby', name=name, code=code))
 
 @app.route('/rooms/<name>&<code>')
@@ -63,7 +64,7 @@ def lobby(name, code):
     player = game.get_player(name)
     if not player:
         return jsonify({"error": "Player not found."})
-    return render_template("room.html", name=name, code=code, locations=game.get_locations(), owner=str(player.is_owner()))
+    return render_template("room.html", name=name, code=code, locations=game.get_locations(), owner=player.is_owner())
 
 @socketio.on('join_room')
 def handle_join_room(data):
@@ -73,9 +74,34 @@ def handle_join_room(data):
     game = game_manager.get_game(room)
     if not game:
         return jsonify({"error": "Game not found."})
+    player = game.get_player(name)
+    if not player:
+        return jsonify({"error": "Player not found."})
+    player.set_socket_id(request.sid)
     players = game.get_player_names()
     emit('player_joined', {'players': players}, to=room)
     return None
+
+@app.route('/rooms/<name>&<code>/start')
+def start_game(name, code):
+    game = game_manager.get_game(code)
+    if not game:
+        return jsonify({"error": "Game not found."})
+    player = game.get_player(name)
+    if not player:
+        return jsonify({"error": "Player not found."})
+    if not player.is_owner():
+        return jsonify({"error": "Only owner can start a game."})
+    duration = request.args.get("duration", 480)
+    game.set_game_duration(duration)
+    # TODO: start game
+    # Assign game a location
+    results = game.start()
+    # Send each player a personalized message with location and occupation (or SPY)
+    for socket_id, result in results.items():
+        socketio.emit('secret', result, to=socket_id)
+    return jsonify({"message": "game started"})
+
 
 if __name__ == '__main__':
     socketio.run(app)
