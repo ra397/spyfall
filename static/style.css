@@ -12,6 +12,10 @@ body {
     justify-content: space-evenly;
 }
 
+span {
+    cursor: default;
+}
+
 .hidden {
     display: none !important;
 }
@@ -83,21 +87,16 @@ img.icon.arrow {
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1px solid gray;
+    margin-top: 0.5rem;
 }
 
 #lobby-controls {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-}
-
-#lobby-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     font-size: 1.25rem;
+    gap: 0 2ch;
 }
-
 .control {
     display: flex;
     justify-content: center;
@@ -115,4 +114,8 @@ img.icon.arrow {
 .value {
     padding: 0 0.75ch;
     font-size: 1.5rem;
+}
+
+#game-code-container {
+    display: flex;
 }

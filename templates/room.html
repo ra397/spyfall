@@ -55,11 +55,11 @@
         {% endif %}
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="../static/locations.js"></script>
     <script type="text/javascript" charset="utf-8">
         const name = "{{ name }}";
         const code = "{{ code }}";
         const owner = {{ owner|tojson }};
-        const locations = {{ locations|tojson }};
 
         const socket = io();
         // On connection, notify room that you have connected
@@ -78,8 +78,8 @@
             data.players.forEach(player => {
                 const cell = document.createElement('div');
                 cell.style.display = 'flex';
-                cell.style.justifyContent = 'space-between';
                 cell.style.alignItems = 'center';
+                cell.style.padding = '0.25rem';
 
                 const nameSpan = document.createElement('span');
                 nameSpan.textContent = player;
@@ -98,14 +98,6 @@
                 playersContainer.appendChild(cell);
             })
             num_players = data.players.length;
-        });
-
-        // Display locations
-        const locationsContainer = document.getElementById("locations-container");
-        locations.forEach(location => {
-            const locationSpan = document.createElement('span');
-            locationSpan.textContent = location;
-            locationsContainer.appendChild(locationSpan);
         });
 
         // owner controls
@@ -135,6 +127,7 @@
 
             startGameBtn.addEventListener("click", async () => {
                 if (num_players < 3) {
+                    // TODO: add user feedback
                     return;
                 }
                 // info to provide: code, duration
@@ -158,10 +151,12 @@
             // Duration
             // Players?
             console.log("game has been started by owner");
-            console.log(data.result);
+            console.log(data.role);
 
-            locationEl.textContent = data.result.location;
-            occupationEl.textContent = data.result.occupation;
+            locationEl.textContent = data.role.location;
+            occupationEl.textContent = data.role.occupation;
+            // TODO: display locations
+            displayLocations(data.locations);
             switchView("game");
             startCountdown(data.duration);
         });
@@ -172,6 +167,20 @@
             countdownEl.textContent = "";
             switchView("lobby");
         })
+
+        displayLocations(window.locations);
+
+        function displayLocations(locations) {
+            // Display locations
+            const locationsContainer = document.getElementById("locations-container");
+            locationsContainer.innerHTML = "";
+            locations.forEach(location => {
+                const locationSpan = document.createElement('span');
+                locationSpan.textContent = location;
+                locationSpan.style.padding = "0.25rem";
+                locationsContainer.appendChild(locationSpan);
+            });
+        }
 
         // vote socket.emit
 

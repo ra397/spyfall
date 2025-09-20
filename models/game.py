@@ -8,6 +8,7 @@ class Game:
         self.players = []
         self.game_duration = 480 # default - 8 minute games
         self.locations_played = []
+        self.current_location = None
 
     def add_player(self, player: Player):
         if self.is_unique(player):
@@ -51,7 +52,8 @@ class Game:
             possible_locations = list(locations_occupations.keys())
             self.locations_played.clear()
         location = random.choice(possible_locations)
-        self.add_to_locations_played(location)
+
+        self.current_location = location
 
         spy = random.choice(self.players)
 
@@ -77,4 +79,5 @@ class Game:
         return results
 
     def end(self):
+        self.add_to_locations_played(self.current_location)
         self.set_game_duration(480)

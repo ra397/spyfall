@@ -64,7 +64,8 @@ def lobby(name, code):
     player = game.get_player(name)
     if not player:
         return jsonify({"error": "Player not found."})
-    return render_template("room.html", name=name, code=code, locations=game.get_locations(), owner=player.is_owner())
+    print(f"Locations: {game.get_locations()}")
+    return render_template("room.html", name=name, code=code, owner=player.is_owner())
 
 @socketio.on('join_room')
 def handle_join_room(data):
@@ -96,10 +97,10 @@ def start_game(name, code):
     game.set_game_duration(duration)
     # TODO: start game
     # Assign game a location
-    results = game.start()
+    player_roles = game.start()
     # Send each player a personalized message with location and occupation (or SPY)
-    for socket_id, result in results.items():
-        socketio.emit('game_started', { 'result': result, 'duration': game.get_game_duration() }, to=socket_id)
+    for socket_id, role in player_roles.items():
+        socketio.emit('game_started', { 'role': role, 'duration': game.get_game_duration(), 'locations': game.get_locations() }, to=socket_id)
     return jsonify({"message": "game started"})
 
 @app.route('/rooms/<name>&<code>/end')

@@ -1,0 +1,1 @@
+window.locations = ['Hospital', 'Airport', 'High School', 'Fast Food Restaurant', 'Train Station', 'Stadium', 'Beach', 'Grocery Store', 'Hotel', 'Movie Theater', 'Police Station', 'Casino', 'Nightclub', 'Cruise Ship', 'Courtroom', 'Office'];
