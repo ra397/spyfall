@@ -475,8 +475,33 @@ export async function leaveGame() {
     const state = stateManager.getState();
 
     try {
-        // Remove player from game
-        await deleteDoc(doc(db, 'players', state.playerId));
+        // If the player is the owner, delete the entire game and all players
+        if (state.isOwner) {
+            const { gameCode } = state;
+
+            // Get all players in the game
+            const playersQuery = query(
+                collection(db, 'players'),
+                where('gameCode', '==', gameCode)
+            );
+            const playersSnapshot = await getDocs(playersQuery);
+
+            // Create batch write to delete all players and the game
+            const batch = writeBatch(db);
+
+            // Delete all players
+            playersSnapshot.docs.forEach(playerDoc => {
+                batch.delete(doc(db, 'players', playerDoc.id));
+            });
+
+            // Delete the game
+            batch.delete(doc(db, 'games', gameCode));
+
+            await batch.commit();
+        } else {
+            // If not the owner, just remove this player from game
+            await deleteDoc(doc(db, 'players', state.playerId));
+        }
 
         // Clear localStorage
         localStorage.removeItem('spyfall_gameCode');
