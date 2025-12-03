@@ -129,7 +129,7 @@ class HomeScreen extends HTMLElement {
                 }
             </style>
             
-            <h1>🕵️ Spyfall</h1>
+            <h1>Spyfall</h1>
             
             <div class="card">
                 <h2>Create New Game</h2>

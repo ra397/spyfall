@@ -272,13 +272,7 @@ class GameScreen extends HTMLElement {
                     display: flex;
                     gap: 10px;
                     margin-top: 20px;
-                }
-                
-                .controls {
-                    background: #fff3cd;
-                    border-radius: 8px;
-                    padding: 15px;
-                    margin-bottom: 15px;
+                    justify-content: space-around;
                 }
                 
                 .error {
@@ -288,7 +282,7 @@ class GameScreen extends HTMLElement {
             </style>
             
             <div class="header">
-                <h1>🕵️ Spyfall</h1>
+                <h1>Spyfall</h1>
                 <div id="timer" class="timer">${timeDisplay}</div>
             </div>
             
@@ -325,18 +319,17 @@ class GameScreen extends HTMLElement {
             </div>
             
             ${state.isOwner ? `
-                <div class="controls">
-                    <h2>Game Controls</h2>
-                    <p>End the round when players are ready to reveal the spy or when time runs out.</p>
-                    <button id="end-btn" class="btn btn-warning" ${state.loading ? 'disabled' : ''}>
-                        ${state.loading ? 'Ending...' : 'End Round'}
-                    </button>
-                </div>
-            ` : ''}
-            
+            <div class="actions">
+                <button id="end-btn" class="btn btn-warning" ${state.loading ? 'disabled' : ''}>
+                    ${state.loading ? 'Ending...' : 'End Round'}
+                </button>
+                <button id="leave-btn" class="btn btn-danger">Leave Game</button>
+            </div>
+            ` : `
             <div class="actions">
                 <button id="leave-btn" class="btn btn-danger">Leave Game</button>
             </div>
+            `}
             
             ${state.error ? `<p class="error">${state.error}</p>` : ''}
         `;

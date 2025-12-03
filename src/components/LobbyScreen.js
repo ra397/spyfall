@@ -152,6 +152,9 @@ class LobbyScreen extends HTMLElement {
                     border-radius: 8px;
                     padding: 15px;
                     margin-bottom: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
                 }
                 
                 .form-row {
@@ -159,6 +162,7 @@ class LobbyScreen extends HTMLElement {
                     gap: 10px;
                     align-items: center;
                     margin-bottom: 10px;
+                    justify-content: center;
                 }
                 
                 label {
@@ -226,11 +230,12 @@ class LobbyScreen extends HTMLElement {
                     display: flex;
                     gap: 10px;
                     margin-top: 20px;
+                    justify-content: center;
                 }
             </style>
             
             <div class="header">
-                <h1>🕵️ Spyfall Lobby</h1>
+                <h1>Spyfall Lobby</h1>
                 <div class="game-code">${state.gameCode}</div>
             </div>
             
@@ -250,7 +255,6 @@ class LobbyScreen extends HTMLElement {
             
             ${state.isOwner ? `
                 <div class="controls">
-                    <h2>Game Controls</h2>
                     <div class="form-row">
                         <label for="duration-select">Round Duration:</label>
                         <select id="duration-select">
@@ -273,7 +277,6 @@ class LobbyScreen extends HTMLElement {
             ` : `
                 <div class="section">
                     <p>Waiting for the game owner to start the round...</p>
-                    <p>Round duration: ${Math.floor(duration / 60)} minutes</p>
                 </div>
             `}
             
