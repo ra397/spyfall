@@ -1,0 +1,116 @@
+{
+  "locations": [
+    {
+      "name": "Airplane",
+      "occupations": ["First Class Passenger", "Air Marshal", "Flight Attendant", "Pilot", "Co-Pilot", "Economy Passenger", "Mechanic"]
+    },
+    {
+      "name": "Bank",
+      "occupations": ["Armored Car Driver", "Security Guard", "Manager", "Teller", "Customer", "Robber", "Consultant"]
+    },
+    {
+      "name": "Beach",
+      "occupations": ["Lifeguard", "Ice Cream Vendor", "Surfer", "Tourist", "Beach Photographer", "Volleyball Player", "Sunbather"]
+    },
+    {
+      "name": "Casino",
+      "occupations": ["Dealer", "Bouncer", "Gambler", "Bartender", "Manager", "Security Guard", "Entertainer"]
+    },
+    {
+      "name": "Cathedral",
+      "occupations": ["Priest", "Tourist", "Nun", "Choir Member", "Organist", "Wedding Guest", "Beggar"]
+    },
+    {
+      "name": "Circus Tent",
+      "occupations": ["Acrobat", "Animal Trainer", "Clown", "Juggler", "Magician", "Visitor", "Fire Eater"]
+    },
+    {
+      "name": "Corporate Party",
+      "occupations": ["CEO", "Secretary", "Accountant", "Manager", "Entertainer", "Caterer", "Delivery Person"]
+    },
+    {
+      "name": "Crusader Army",
+      "occupations": ["Knight", "Monk", "Archer", "Squire", "Prisoner", "Servant", "Bishop"]
+    },
+    {
+      "name": "Day Spa",
+      "occupations": ["Customer", "Stylist", "Masseuse", "Manicurist", "Beautician", "Dermatologist", "Receptionist"]
+    },
+    {
+      "name": "Embassy",
+      "occupations": ["Ambassador", "Security Guard", "Government Official", "Tourist", "Refugee", "Spy", "Secretary"]
+    },
+    {
+      "name": "Hospital",
+      "occupations": ["Doctor", "Nurse", "Patient", "Surgeon", "Intern", "Visitor", "Anesthesiologist"]
+    },
+    {
+      "name": "Hotel",
+      "occupations": ["Manager", "Doorman", "Bellhop", "Guest", "Housekeeper", "Security Guard", "Concierge"]
+    },
+    {
+      "name": "Military Base",
+      "occupations": ["Colonel", "Soldier", "Nurse", "Medic", "Cook", "Sniper", "Tank Operator"]
+    },
+    {
+      "name": "Movie Studio",
+      "occupations": ["Director", "Actor", "Camera Operator", "Producer", "Costume Designer", "Stunt Double", "Sound Engineer"]
+    },
+    {
+      "name": "Ocean Liner",
+      "occupations": ["Captain", "Passenger", "Bartender", "Waiter", "Entertainer", "Cook", "Deck Worker"]
+    },
+    {
+      "name": "Passenger Train",
+      "occupations": ["Engineer", "Conductor", "Passenger", "Waiter", "Border Guard", "Stoker", "Mechanic"]
+    },
+    {
+      "name": "Pirate Ship",
+      "occupations": ["Captain", "Sailor", "Navigator", "Cabin Boy", "Cook", "Cannoneer", "Prisoner"]
+    },
+    {
+      "name": "Polar Station",
+      "occupations": ["Scientist", "Biologist", "Geologist", "Medic", "Expedition Leader", "Radio Operator", "Hydrologist"]
+    },
+    {
+      "name": "Police Station",
+      "occupations": ["Detective", "Lawyer", "Archivist", "Criminal", "Journalist", "Patrol Officer", "Forensic Scientist"]
+    },
+    {
+      "name": "Restaurant",
+      "occupations": ["Chef", "Waiter", "Customer", "Food Critic", "Musician", "Hostess", "Dishwasher"]
+    },
+    {
+      "name": "School",
+      "occupations": ["Principal", "Student", "Teacher", "Cafeteria Worker", "Janitor", "Security Guard", "Gym Teacher"]
+    },
+    {
+      "name": "Service Station",
+      "occupations": ["Car Wash Attendant", "Manager", "Mechanic", "Customer", "Tire Specialist", "Cashier", "Tow Truck Driver"]
+    },
+    {
+      "name": "Space Station",
+      "occupations": ["Commander", "Engineer", "Pilot", "Scientist", "Doctor", "Space Tourist", "Alien"]
+    },
+    {
+      "name": "Submarine",
+      "occupations": ["Captain", "Sailor", "Navigator", "Sonar Technician", "Cook", "Radioman", "Medic"]
+    },
+    {
+      "name": "Supermarket",
+      "occupations": ["Cashier", "Butcher", "Customer", "Security Guard", "Shelf Stocker", "Manager", "Janitor"]
+    },
+    {
+      "name": "Theater",
+      "occupations": ["Actor", "Director", "Stagehand", "Audience Member", "Costume Designer", "Prompter", "Usher"]
+    },
+    {
+      "name": "University",
+      "occupations": ["Professor", "Student", "Dean", "Psychologist", "Janitor", "Graduate Student", "Receptionist"]
+    },
+    {
+      "name": "Zoo",
+      "occupations": ["Zookeeper", "Veterinarian", "Visitor", "Photographer", "Food Vendor", "Child", "Security Guard"]
+    }
+  ]
+}
