@@ -302,8 +302,7 @@ class GameScreen extends HTMLElement {
                 <ul>
                     ${state.players.map(player => `
                         <li class="player-item">
-                            <span>${player.playerName}</span>
-                            ${player.playerId === state.playerId ? '<span class="you-badge">YOU</span>' : ''}
+                            ${player.playerId !== state.playerId ? `<span>${player.playerName}</span>` : ''}
                         </li>
                     `).join('')}
                 </ul>
