@@ -235,7 +235,7 @@ class LobbyScreen extends HTMLElement {
             </style>
             
             <div class="header">
-                <h1>Spyfall Lobby</h1>
+                <h1>Welcome, ${state.playerName}!</h1>
                 <div class="game-code">${state.gameCode}</div>
             </div>
             
@@ -244,9 +244,7 @@ class LobbyScreen extends HTMLElement {
                 <ul>
                     ${state.players.map(player => `
                         <li class="player-item">
-                            <span>${player.playerName}</span>
-                            ${player.playerId === state.game?.ownerId ? '<span class="owner-badge">OWNER</span>' : ''}
-                            ${player.playerId === state.playerId ? '<span class="you-badge">YOU</span>' : ''}
+                            ${player.playerId !== state.playerId ? `<span>${player.playerName}</span>` : ''}                          
                         </li>
                     `).join('')}
                 </ul>
@@ -275,9 +273,6 @@ class LobbyScreen extends HTMLElement {
                     </button>
                 </div>
             ` : `
-                <div class="section">
-                    <p>Waiting for the game owner to start the round...</p>
-                </div>
             `}
             
             <div class="section">
