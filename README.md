@@ -1,6 +1,6 @@
 # Spyfall
 
-A real-time multiplayer implementation of the social deduction game Spyfall. Built with vanilla JavaScript and Firebase.
+A real-time multiplayer implementation of the social deduction game [Spyfall](https://en.wikipedia.org/wiki/Spyfall_(card_game)). Built with vanilla JavaScript and Firebase.
 
 **[Play Now](https://spyfall-3af5b.web.app)**
 
