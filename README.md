@@ -34,7 +34,7 @@ Spyfall is a game where players are assigned roles at a specific location, excep
 
 ```bash
 # Clone and install
-git clone <repository-url>
+git clone https://github.com/ra397/spyfall.git
 cd spyfall
 npm install
 
